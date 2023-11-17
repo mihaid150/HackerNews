@@ -1,0 +1,27 @@
+# Compiled files
+elm-stuff/
+build/
+dist/
+
+# Dependency directories
+node_modules/
+
+# Elm generated files
+elm.js
+elm-stuff/
+
+# Logs
+logs
+*.log
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Optional: Include any other files or directories specific to your project
