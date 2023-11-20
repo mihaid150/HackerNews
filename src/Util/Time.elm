@@ -139,9 +139,29 @@ durationBetween (Time.millisToPosix 1000) (Time.millisToPosix 1000) --> Nothing
 
 -}
 durationBetween : Time.Posix -> Time.Posix -> Maybe Duration
-durationBetween _ _ =
-    -- Nothing
-    Debug.todo "durationBetween"
+durationBetween timePosix1 timePosix2 =
+    let
+        millisInASecond = 1000
+        millisInAMinute = millisInASecond * 60
+        millisInAnHour = millisInAMinute * 60
+        millisInADay = millisInAnHour * 24
+
+        time1 = Time.posixToMillis timePosix1
+        time2 = Time.posixToMillis timePosix2
+        duration = time2 - time1
+
+        compute unitSize remainingMillis = (remainingMillis // unitSize, modBy unitSize remainingMillis)
+        (days, remainderAfterDays) = compute millisInADay duration
+        (hours, remainderAfterHours) = compute millisInAnHour remainderAfterDays
+        (minutes, remainderAfterMinutes) = compute millisInAMinute remainderAfterHours
+        (seconds, _) = compute millisInASecond remainderAfterMinutes
+    in
+        if duration <= 0 then
+            Nothing
+        else
+            Just {seconds = seconds, minutes = minutes, hours = hours, days = days}
+
+
 
 
 {-| Format a `Duration` as a human readable string
@@ -164,6 +184,27 @@ durationBetween _ _ =
 
 -}
 formatDuration : Duration -> String
-formatDuration _ =
-    -- ""
-    Debug.todo "formatDuration"
+formatDuration duration =
+    let
+        formatComponent value unit =
+            if value > 0 then
+                Just (String.fromInt value ++ " " ++ unit ++ if value == 1 then "" else "s")
+            else
+                Nothing
+
+        time =
+            [ formatComponent duration.days "day"
+            , formatComponent duration.hours "hour"
+            , formatComponent duration.minutes "minute"
+            , formatComponent duration.seconds "second"]
+            |> List.filterMap identity
+            |> String.join " "
+    in
+        if time == "" then
+            "just now"
+        else
+            time ++ " ago"
+
+
+
+

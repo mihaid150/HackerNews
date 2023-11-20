@@ -17,11 +17,12 @@ type Cursor a
     = Cursor (List a) a (List a)
 
 
+-- it creates a Cursor basically
 withSelectedElement : List a -> a -> List a -> Cursor a
 withSelectedElement left mid right =
     Cursor (List.reverse left) mid right
 
-
+-- nonEmpty 1 [2, 3] --> Cursor [] 1 [2, 3]
 nonEmpty : a -> List a -> Cursor a
 nonEmpty x xs =
     Cursor [] x xs
@@ -35,9 +36,10 @@ nonEmpty x xs =
 
 -}
 fromList : List a -> Maybe (Cursor a)
-fromList _ =
-    -- Nothing
-    Debug.todo "fromList"
+fromList l =
+    case l of
+        [] -> Nothing
+        x :: xs -> Just (withSelectedElement [] x xs)
 
 
 {-| Convert the `Cursor` to a `List`
@@ -46,9 +48,9 @@ fromList _ =
 
 -}
 toList : Cursor a -> List a
-toList _ =
-    -- []
-    Debug.todo "toList"
+toList (Cursor backwardList currentElement forwardList) =
+    List.reverse (currentElement :: backwardList) ++ forwardList
+
 
 
 {-| Get the current element from the cursor
@@ -77,9 +79,10 @@ If the cursor would go past the last element, the function should return `Nothin
 
 -}
 forward : Cursor a -> Maybe (Cursor a)
-forward _ =
-    -- Nothing
-    Debug.todo "forward"
+forward (Cursor backwardList currentElement forwardList) =
+    case forwardList of
+        [] -> Nothing
+        f :: fs -> Just (withSelectedElement (List.reverse (currentElement :: backwardList)) f fs)
 
 
 {-| Move the cursor backward.
@@ -94,9 +97,10 @@ If the cursor would go before the first element, the function should return `Not
 
 -}
 back : Cursor a -> Maybe (Cursor a)
-back _ =
-    -- Nothing
-    Debug.todo "back"
+back (Cursor backwardList currentElement forwardList) =
+    case List.reverse backwardList of
+        [] -> Nothing
+        b :: bs -> Just (withSelectedElement (List.reverse bs) b (currentElement :: forwardList))
 
 
 {-| Get the number of elements
@@ -107,6 +111,6 @@ back _ =
 
 -}
 length : Cursor a -> Int
-length _ =
-    -- 0
-    Debug.todo "length"
+length (Cursor backwardList _ forwardList) =
+   (List.length backwardList) + 1 + (List.length forwardList)
+

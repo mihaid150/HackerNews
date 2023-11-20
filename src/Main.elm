@@ -3,7 +3,7 @@ module Main exposing (devFlags, init, main, prodFlags, reactorMain, update, view
 import Browser
 import Dict exposing (update)
 import Effect exposing (Effect, performEffect)
-import Html exposing (Html, button, div, input, select, text)
+import Html exposing (Html, button, div, h1, input, select, text)
 import Html.Attributes exposing (href, type_)
 import Model exposing (AppState(..), Config, LoadingPostsState, Mode(..), Model, Msg(..))
 import Model.Post as Post
@@ -148,8 +148,11 @@ update msg model =
                             ( Model.FailedToLoad err, Effect.NoEffect )
 
                 ( Model.LoadedPosts state, ConfigChanged change ) ->
-                    -- ( Model.LoadedPosts state, Effect.NoEffect )
-                    ( Debug.todo "update the config in the update function", Effect.NoEffect )
+                   let
+                       newConfig = Model.PostsConfig.applyChanges change state.config
+                   in
+                   ( Model.LoadedPosts { state | config = newConfig }, Effect.NoEffect )
+
 
                 ( state, _ ) ->
                     ( state, Effect.NoEffect )
@@ -190,4 +193,7 @@ view model =
                 _ ->
                     div [] [ text "Other" ]
     in
-    div [] [ Html.h1 [] [ text title ], body ]
+        div [] [
+            h1 [] [ text title ]
+            --, body
+        ]

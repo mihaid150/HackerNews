@@ -43,9 +43,14 @@ sortToString sort =
 
 -}
 sortFromString : String -> Maybe SortBy
-sortFromString _ =
-    -- Nothing
-    Debug.todo "sortFromString"
+sortFromString sortByString =
+    case sortByString of
+        "Score" -> Just Score
+        "Title" -> Just Title
+        "Posted" -> Just Posted
+        "None" -> Just None
+        _ -> Nothing
+
 
 
 sortToCompareFn : SortBy -> (Post -> Post -> Order)
@@ -81,14 +86,24 @@ defaultConfig =
 {-| A type that describes what option changed and how
 -}
 type Change
-    = ChangeTODO
+    = UpdatePostsToFetch Int
+    | UpdatePostsToShow Int
+    | UpdateSortBy SortBy
+    | UpdateShowJobs Bool
+    | UpdateShowTextOnly Bool
 
 
 {-| Given a change and the current configuration, return a new configuration with the changes applied
 -}
 applyChanges : Change -> PostsConfig -> PostsConfig
-applyChanges _ _ =
-    Debug.todo "applyChanges"
+applyChanges change postsConfig =
+    case change of
+        UpdatePostsToFetch newValue -> { postsConfig | postsToFetch = newValue }
+        UpdatePostsToShow newValue -> { postsConfig | postsToShow = newValue }
+        UpdateSortBy newSort -> { postsConfig | sortBy = newSort }
+        UpdateShowJobs newBool -> { postsConfig | showJobs = newBool }
+        UpdateShowTextOnly newBool -> { postsConfig | showTextOnly = newBool }
+
 
 
 {-| Given the configuration and a list of posts, return the relevant subset of posts according to the configuration
@@ -103,6 +118,9 @@ Relevant library functions:
 
 -}
 filterPosts : PostsConfig -> List Post -> List Post
-filterPosts _ _ =
-    -- []
-    Debug.todo "filterPosts"
+filterPosts postsConfig posts =
+    posts
+        |> List.filter (\_ -> postsConfig.showTextOnly)
+        |> List.filter (\_ -> postsConfig.showJobs)
+        |> List.sortWith (sortToCompareFn postsConfig.sortBy)
+        |> List.take postsConfig.postsToShow
