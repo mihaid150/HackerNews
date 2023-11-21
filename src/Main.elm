@@ -194,6 +194,6 @@ view model =
                     div [] [ text "Other" ]
     in
         div [] [
-            h1 [] [ text title ]
-            --, body
+            h1 [] [ text title ],
+            body
         ]

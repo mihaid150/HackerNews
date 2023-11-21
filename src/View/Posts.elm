@@ -89,7 +89,6 @@ postsConfigView config =
     let
         postsToShowOptions = [10, 25, 50]
         sortByOptions = ["Score", "Title", "Posted", "None"]
-
         postsToShowOptionView number =
             let
                 isSelected = number == config.postsToShow
