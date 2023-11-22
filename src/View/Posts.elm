@@ -102,27 +102,35 @@ postsConfigView config =
                         option [ value sortByString, selected isSelected ] [text sortByString]
     in
         div [] [
-                    p [] [text "Choose how many posts to show"],
-                    select [ id "select-posts-per-page"
-                           , onInput (String.toInt >> Maybe.withDefault 0 >> UpdatePostsToShow >> ConfigChanged) ]
-                        (List.map postsToShowOptionView postsToShowOptions),
+                    div [] [
+                    p [] [text "Posts to show"],
+                                        select [ id "select-posts-per-page"
+                                               , onInput (String.toInt >> Maybe.withDefault 0 >> UpdatePostsToShow >> ConfigChanged) ]
+                                            (List.map postsToShowOptionView postsToShowOptions)
+                    ],
 
-                    p [] [text "Choose sorting method"],
-                    select [ id "select-sort-by"
-                           , onInput (sortFromString >> Maybe.withDefault None >> UpdateSortBy >> ConfigChanged) ]
-                        (List.map sortByOptionView sortByOptions),
+                    div [] [
+                        p [] [text "Choose sorting method"],
+                                            select [ id "select-sort-by"
+                                                   , onInput (sortFromString >> Maybe.withDefault None >> UpdateSortBy >> ConfigChanged) ]
+                                                (List.map sortByOptionView sortByOptions)
+                    ],
 
-                    p [] [text "Show Job Posts"],
-                    input [ type_ "checkbox"
-                          , checked config.showJobs
-                          , onCheck (UpdateShowJobs >> ConfigChanged)
-                          , id "checkbox-show-job-posts"
-                          ] [],
+                    div [] [
+                        p [] [text "Show job posts"],
+                        input [ type_ "checkbox"
+                              , id "checkbox-show-job-posts"
+                              , checked config.showJobs
+                              , onCheck (UpdateShowJobs >> ConfigChanged)
+                              ] []
+                    ],
 
-                    p [] [text "Show Text Only Posts"],
-                    input [ type_ "checkbox"
-                          , checked config.showTextOnly
-                          , onCheck (UpdateShowTextOnly >> ConfigChanged)
-                          , id "checkbox-show-text-only-posts"
-                          ] []
+                    div [] [
+                        p [] [text "Show text only posts"],
+                        input [ type_ "checkbox"
+                              , checked config.showTextOnly
+                              , onCheck (UpdateShowTextOnly >> ConfigChanged)
+                              , id "checkbox-show-text-only-posts"
+                              ] []
+                    ]
                 ]
