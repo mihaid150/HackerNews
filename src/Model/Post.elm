@@ -41,5 +41,5 @@ decode =
         (De.field "title" De.string)
         (De.field "url"  (De.maybe De.string))
         (De.field "time" (De.int |> De.map (\t -> Time.millisToPosix (t * 1000))))
-        (De.field "type_" De.string)
+        (De.field "type" De.string)
 

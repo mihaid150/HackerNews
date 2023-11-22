@@ -120,7 +120,7 @@ Relevant library functions:
 filterPosts : PostsConfig -> List Post -> List Post
 filterPosts postsConfig posts =
     posts
-        |> List.filter (\_ -> postsConfig.showTextOnly)
-        |> List.filter (\_ -> postsConfig.showJobs)
+        |> List.filter (\post -> if postsConfig.showTextOnly then isTextPost post else True)
+        |> List.filter (\post -> if postsConfig.showJobs then isJobPost post else True)
         |> List.sortWith (sortToCompareFn postsConfig.sortBy)
         |> List.take postsConfig.postsToShow
