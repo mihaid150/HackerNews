@@ -129,6 +129,11 @@ filterPosts postsConfig posts =
                                        Just _ -> True
                                        Nothing -> False
                       )
-       |> List.filter (\_ -> postsConfig.showJobs )
+       |> List.filter (\post -> if postsConfig.showJobs then
+                                   post.type_ == "job"
+                                else
+                                    True
+
+       )
        |> List.sortWith (sortToCompareFn postsConfig.sortBy)
        |> List.take postsConfig.postsToShow
