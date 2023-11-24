@@ -120,20 +120,29 @@ Relevant library functions:
 filterPosts : PostsConfig -> List Post -> List Post
 filterPosts postsConfig posts =
     posts
-       |> List.filter (\post -> if postsConfig.showTextOnly then
-                                    case post.url of
-                                       Just _-> True
-                                       Nothing -> True
-                                else
-                                    case post.url of
-                                       Just _ -> True
-                                       Nothing -> False
-                      )
-       |> List.filter (\post -> if postsConfig.showJobs then
-                                   post.type_ == "job"
-                                else
-                                    True
-
+    
+       |> List.filter(\post ->
+                    if postsConfig.showTextOnly && (not postsConfig.showJobs) then
+                        if post.type_ == "job" then
+                            False
+                        else
+                            case post.url of
+                                Just _ -> True
+                                Nothing -> False
+                    else
+                        case post.url of
+                            Just _ -> True
+                            Nothing -> False
        )
+          |> List.filter(\post ->
+                           if postsConfig.showJobs && (not postsConfig.showTextOnly) then
+                              post.type_ == "job"
+                           else
+                            True
+              )
        |> List.sortWith (sortToCompareFn postsConfig.sortBy)
        |> List.take postsConfig.postsToShow
+
+
+
+
