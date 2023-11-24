@@ -60,7 +60,7 @@ sortToCompareFn sort =
             \postA postB -> compare postB.score postA.score
 
         Title ->
-            \postA postB -> compare postA.title postB.title
+            \postA postB -> compare (String.toLower postA.title) (String.toLower postB.title)
 
         Posted ->
             \postA postB -> compare (Time.posixToMillis postB.time) (Time.posixToMillis postA.time)
@@ -120,7 +120,7 @@ Relevant library functions:
 filterPosts : PostsConfig -> List Post -> List Post
 filterPosts postsConfig posts =
     posts
-    
+
        |> List.filter(\post ->
                     if postsConfig.showTextOnly && (not postsConfig.showJobs) then
                         if post.type_ == "job" then
@@ -134,7 +134,7 @@ filterPosts postsConfig posts =
                             Just _ -> True
                             Nothing -> False
        )
-          |> List.filter(\post ->
+       |> List.filter(\post ->
                            if postsConfig.showJobs && (not postsConfig.showTextOnly) then
                               post.type_ == "job"
                            else
