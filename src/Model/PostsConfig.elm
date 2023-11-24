@@ -140,8 +140,9 @@ filterPosts postsConfig posts =
                            else
                             True
               )
-       |> List.sortWith (sortToCompareFn postsConfig.sortBy)
        |> List.take postsConfig.postsToShow
+       |> List.sortWith (sortToCompareFn postsConfig.sortBy)
+
 
 
 
