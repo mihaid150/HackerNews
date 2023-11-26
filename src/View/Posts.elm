@@ -40,13 +40,16 @@ postTable postsConfig currentTime posts =
              th [] [text "Link"]
            ]
          ],
-         tbody [] (createPostsRows posts currentTime)
+         tbody [] (createPostsRows posts currentTime postsConfig)
        ]
      ]
 
-createPostsRows : List Post -> Time.Posix -> List (Html Msg)
-createPostsRows posts currentTime =
-    List.map (postRow currentTime) posts
+createPostsRows : List Post -> Time.Posix -> PostsConfig -> List (Html Msg)
+createPostsRows posts currentTime postsConfig=
+    posts
+        |> filterPosts postsConfig
+        |> List.map (postRow currentTime)
+
 
 postRow : Time.Posix -> Post -> Html Msg
 postRow currentTime post =
