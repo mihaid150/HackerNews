@@ -39,7 +39,7 @@ decode =
         (De.field "id" De.int)
         (De.field "score" De.int)
         (De.field "title" De.string)
-        (De.field "url"  (De.maybe De.string))
+        (De.maybe <| De.field "url" De.string)
         (De.field "time" (De.int |> De.map (\t -> Time.millisToPosix (t * 1000))))
         (De.field "type" De.string)
 

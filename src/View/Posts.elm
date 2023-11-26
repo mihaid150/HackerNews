@@ -1,6 +1,6 @@
 module View.Posts exposing (..)
 
-import Html exposing (Html, div, input, option, p, select, table, tbody, td, text, th, thead, tr)
+import Html exposing (Html, a, div, input, option, p, select, table, tbody, td, text, th, thead, tr)
 import Html.Attributes exposing (checked, class, href, id, placeholder, selected, type_, value)
 import Html.Events exposing (onCheck, onInput)
 import Model exposing (Msg(..))
@@ -64,13 +64,13 @@ postRow currentTime post =
             td [class "post-title"] [text post.title],
             td [class "post-type"] [text post.type_],
             td [class "post-time"] [text (Util.Time.formatTime Time.utc post.time ++ " (" ++ relativeDuration ++ ")")],
-            td [class "post-url"] [maybeText post.url]
+            td [class "post-url"] [maybeLink post.url]
         ]
 
-maybeText: Maybe String -> Html Msg
-maybeText maybeValue =
-    case maybeValue of
-        Just value -> text value
+maybeLink : Maybe String -> Html Msg
+maybeLink maybeUrl =
+    case maybeUrl of
+        Just value -> a [href value, class "post-url-link"] [text "Link"]
         Nothing -> text ""
 
 {-| Show the configuration options for the posts table
